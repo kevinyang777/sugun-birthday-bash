@@ -17,6 +17,7 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{background:var(--bg)}
 body{margin:0;color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.5;overflow-x:hidden;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
@@ -39,7 +40,7 @@ h1,h2{margin:0;line-height:1;text-wrap:balance}
     linear-gradient(90deg,transparent 50%,rgba(255,255,255,.035) 50%);
   background-size:100% 30px,70px 60px,140px 30px;
   box-shadow:0 30px 60px -30px rgba(255,43,214,.5),0 0 0 1px rgba(255,255,255,.05);
-  padding:14% 8% 18%;display:grid;gap:3%;justify-items:center;text-align:center;isolation:isolate}
+  padding:14% 8% 14%;display:grid;gap:3%;justify-items:center;text-align:center;isolation:isolate}
 .poster::before,.poster::after{content:"";position:absolute;width:52%;aspect-ratio:1;border-radius:50%;z-index:0;pointer-events:none;opacity:.9;
   background:repeating-radial-gradient(circle at center,transparent 0 44%,var(--magenta) 44% 46.5%,transparent 46.5% 55%,#fff 55% 57%,transparent 57% 66%,var(--cyan) 66% 68%,transparent 68% 78%,var(--yellow) 78% 80%,transparent 80%)}
 .poster::before{left:-26%;top:-18%;filter:drop-shadow(0 0 6px var(--magenta))}
