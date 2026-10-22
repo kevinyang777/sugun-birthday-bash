@@ -119,6 +119,20 @@ h1,h2{margin:0;line-height:1;text-wrap:balance}
   background:transparent;color:var(--cyan);cursor:pointer;box-shadow:0 0 14px rgba(25,243,255,.4);text-shadow:0 0 6px var(--cyan)}
 .btn:hover{background:rgba(25,243,255,.12)}
 .btn:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+.album{display:grid;gap:18px;justify-items:center;text-align:center;width:100%}
+.shots{display:flex;flex-wrap:wrap;justify-content:center;gap:22px;width:100%}
+.shot{margin:0;width:clamp(150px,30%,220px);background:#fdf6ff;padding:8px 8px 10px;border-radius:3px;cursor:pointer;position:relative;
+  box-shadow:0 14px 30px -12px rgba(0,0,0,.8),0 0 18px rgba(255,43,214,.25);transition:transform .25s}
+.shot:nth-child(odd){transform:rotate(-3deg)}.shot:nth-child(even){transform:rotate(2.5deg)}
+.shot:hover,.shot:focus-visible{transform:rotate(0) scale(1.05);z-index:3;outline:none}
+.shot::before{content:"";position:absolute;left:50%;top:-10px;width:60px;height:18px;transform:translateX(-50%) rotate(-2deg);background:rgba(25,243,255,.55);box-shadow:0 0 8px var(--cyan)}
+.shot:nth-child(even)::before{background:rgba(255,43,214,.55);box-shadow:0 0 8px var(--pink)}
+.shot img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;max-width:100%;background:#1a0f36}
+.shot figcaption{font-family:var(--script);color:#1a0f36;font-size:.95rem;padding-top:8px}
+.lightbox{position:fixed;inset:0;z-index:30;background:rgba(7,3,15,.94);display:grid;place-items:center;padding:24px}
+.lightbox[hidden]{display:none}
+.lightbox img{max-width:100%;max-height:100%;border:3px solid var(--pink);box-shadow:0 0 30px rgba(255,43,214,.6);border-radius:4px}
+.lbClose{position:absolute;top:max(14px,env(safe-area-inset-top,0px));right:max(14px,env(safe-area-inset-right,0px));font:inherit;font-size:1.4rem;background:none;border:2px solid var(--cyan);color:var(--cyan);border-radius:50%;width:44px;height:44px;cursor:pointer}
 footer{text-align:center;color:var(--muted);font-size:.85rem;font-family:var(--tech);letter-spacing:.15em}
 @media (prefers-reduced-motion:reduce){.flame,.out .smoke{animation:none}}
 
@@ -151,17 +165,11 @@ body.covered{overflow:hidden;height:100%}
 .cover .tap{color:var(--muted);font-size:.85rem;margin:0}
 @media (prefers-reduced-motion:reduce){.play,.cover.spin .reel{animation:none}.cover{transition:none}}
 /* ---- now playing ---- */
-.np{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:15;width:min(300px,calc(100vw - 24px));
+.np{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:15;max-width:min(300px,calc(100vw - 24px));
   background:#1a0f36;border:2px solid var(--pink);border-radius:8px;box-shadow:0 0 16px rgba(255,43,214,.5);overflow:hidden;display:grid}
 .np .bar{display:flex;align-items:center;gap:8px;padding:6px 8px 6px 10px;font-family:var(--tech);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 6px var(--cyan);min-width:0}
 .np .bar span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .np .bar a{color:var(--yellow);text-decoration:none}
-.np button{font:inherit;background:none;border:0;color:#fff;cursor:pointer;font-size:1rem;line-height:1;padding:2px 4px}
-.np button:focus-visible{outline:2px solid var(--cyan)}
-.np .ctl{display:flex;gap:6px;padding:0 8px 8px}
-.np .ctl button{flex:1;font-family:var(--tech);font-size:.62rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border:2px solid var(--cyan);border-radius:4px;
-  padding:8px 6px;color:var(--cyan);background:rgba(25,243,255,.08);box-shadow:0 0 10px rgba(25,243,255,.3)}
-.np .ctl button:hover{background:rgba(25,243,255,.2)}
 .np .yt{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;left:0;top:0}
 </style>
 </head>
@@ -251,6 +259,19 @@ body.covered{overflow:hidden;height:100%}
     <p class="wish" id="wish" hidden>Make a wish!</p>
     <button class="btn" id="relight" hidden type="button">Rewind &amp; relight</button>
   </section>
+
+  <section class="album" id="album">
+    <p class="eyebrow">Photo album</p>
+    <div class="shots">
+      <figure class="shot"><img src="photos/1.jpg" alt="Sugun in a colour-block windbreaker and MTV tee, lounging in front of a boombox" loading="lazy"><figcaption>Totally rad</figcaption></figure>
+      <figure class="shot"><img src="photos/2.jpg" alt="Sugun in double denim pointing at his MTV shirt" loading="lazy"><figcaption>Double denim</figcaption></figure>
+      <figure class="shot"><img src="photos/3.jpg" alt="Sugun on a leather sofa in a Miami Vice tee" loading="lazy"><figcaption>Miami Vice</figcaption></figure>
+      <figure class="shot"><img src="photos/4.jpg" alt="Sugun leaning on a boombox outside a record store" loading="lazy"><figcaption>Back to the 80's</figcaption></figure>
+      <figure class="shot"><img src="photos/5.jpg" alt="Sugun in sunglasses and a gold chain, vintage photo print" loading="lazy"><figcaption>Music television</figcaption></figure>
+    </div>
+  </section>
+
+  <div class="lightbox" id="lightbox" hidden><button type="button" class="lbClose" id="lbClose" aria-label="Close photo">✕</button><img id="lbImg" alt=""></div>
 
   <footer id="footer"></footer>
 </main>
@@ -353,6 +374,18 @@ function checkDone() {
 $('relight').addEventListener('click', () => { buildCake(); $('wish').hidden = true; $('relight').hidden = true; $('hint').textContent = 'Tap or click a candle to blow it out.'; });
 buildCake();
 
+/* ---------- album lightbox ---------- */
+document.querySelectorAll('.shot').forEach(f => {
+  f.tabIndex = 0;
+  const open = () => { $('lbImg').src = f.querySelector('img').src; $('lbImg').alt = f.querySelector('img').alt; $('lightbox').hidden = false; };
+  f.addEventListener('click', open);
+  f.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+});
+const closeLb = () => { $('lightbox').hidden = true; };
+$('lbClose').addEventListener('click', closeLb);
+$('lightbox').addEventListener('click', e => { if (e.target === e.currentTarget) closeLb(); });
+addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+
 /* ---------- neon confetti ---------- */
 const canvas = $('confetti'), ctx = canvas.getContext('2d');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -383,7 +416,7 @@ function frame() {
 }
 if (!reduced) { spawn(30, true); frame(); }
 
-/* ---------- song ---------- */
+/* ---------- song (plays on open, no controls) ---------- */
 const HOSTED = true; // set to true on the GitHub Pages build (iframes are blocked inside claude.ai)
 let player = null, apiReady = false, pendingStart = false;
 if (HOSTED && CONFIG.song && CONFIG.song.id) {
@@ -391,15 +424,11 @@ if (HOSTED && CONFIG.song && CONFIG.song.id) {
 }
 window.onYouTubeIframeAPIReady = () => { apiReady = true; if (pendingStart) createPlayer(); };
 function createPlayer() {
-  if (player) return;
-  const holder = document.getElementById('ytHolder'); if (!holder) return;
+  if (player || !document.getElementById('ytHolder')) return;
   player = new YT.Player('ytHolder', {
     videoId: CONFIG.song.id, width: 1, height: 1,
     playerVars: { autoplay: 1, loop: 1, playlist: CONFIG.song.id, controls: 0, rel: 0, playsinline: 1 },
-    events: {
-      onReady: e => { e.target.setVolume(80); e.target.playVideo(); },
-      onStateChange: e => { const b = document.getElementById('npPlay'); if (b) b.textContent = e.data === 1 ? '⏸ Pause' : '▶ Play'; }
-    }
+    events: { onReady: e => { e.target.setVolume(80); e.target.playVideo(); } }
   });
 }
 function startSong() {
@@ -407,20 +436,10 @@ function startSong() {
   const np = document.createElement('div'); np.className = 'np'; np.id = 'np';
   const url = 'https://www.youtube.com/watch?v=' + sg.id;
   np.innerHTML = '<div class="bar"><span>♪ ' + sg.title + '</span>'
-    + (HOSTED ? '' : '<a href="' + url + '" target="_blank" rel="noopener">Open on YouTube ▶</a>')
-    + '<button type="button" id="npClose" aria-label="Close player">✕</button></div>'
-    + (HOSTED ? '<div class="ctl"><button type="button" id="npPlay">▶ Play</button><button type="button" id="npMute">🔊 Mute</button></div><div class="yt"><div id="ytHolder"></div></div>' : '');
+    + (HOSTED ? '' : '<a href="' + url + '" target="_blank" rel="noopener">Open on YouTube ▶</a>') + '</div>'
+    + (HOSTED ? '<div class="yt"><div id="ytHolder"></div></div>' : '');
   document.body.appendChild(np);
-  np.querySelector('#npClose').addEventListener('click', () => { if (player) { try { player.stopVideo(); player.destroy(); } catch (e) {} player = null; } np.remove(); });
   if (!HOSTED) return;
-  np.querySelector('#npPlay').addEventListener('click', () => {
-    if (!player) return;
-    if (player.getPlayerState() === 1) player.pauseVideo(); else player.playVideo();
-  });
-  np.querySelector('#npMute').addEventListener('click', e => {
-    if (!player) return;
-    if (player.isMuted()) { player.unMute(); e.target.textContent = '🔊 Mute'; } else { player.mute(); e.target.textContent = '🔇 Unmute'; }
-  });
   if (apiReady) createPlayer(); else pendingStart = true;
 }
 
