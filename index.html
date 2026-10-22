@@ -256,7 +256,7 @@ body.covered{overflow:hidden;height:100%}
 const CONFIG = {
   name: "Sugun Susilo",
   date: "2026-11-09",            // YYYY-MM-DD (page counts down to the next occurrence)
-  time: "11am till you drop",    // blank hides the line
+  time: "11 AM - DROP",          // shown exactly as written; blank hides the line
   where: "PT Akino Wahanamulia, at the parking space",
   rsvp: "",                      // e.g. "RSVP to 0812 3456 7890" — blank hides the line
   candles: 8,                    // candles on the cake (1–10)
@@ -269,7 +269,7 @@ const $ = id => document.getElementById(id);
 $('who').textContent = CONFIG.name + "'s";
 document.title = `${CONFIG.name.split(' ')[0]}'s Birthday Bash`;
 $('where').textContent = CONFIG.where || '';
-if (CONFIG.time) { $('time').textContent = 'From ' + CONFIG.time; $('time').hidden = false; }
+if (CONFIG.time) { $('time').textContent = CONFIG.time; $('time').hidden = false; }
 if (CONFIG.rsvp) { $('rsvp').textContent = CONFIG.rsvp; $('rsvp').hidden = false; }
 $('footer').textContent = CONFIG.footer || '';
 
@@ -392,7 +392,7 @@ function startSong() {
 /* ---------- cover ---------- */
 document.body.classList.add('covered');
 $('coverName').textContent = CONFIG.name + "'s Birthday Bash";
-$('coverWhen').textContent = $('when').textContent + (CONFIG.time ? ' • from ' + CONFIG.time : '');
+$('coverWhen').textContent = $('when').textContent + (CONFIG.time ? ' • ' + CONFIG.time : '');
 $('coverWhere').textContent = CONFIG.where || '';
 $('play').addEventListener('click', () => {
   const c = $('cover'); c.classList.add('spin'); startSong();
