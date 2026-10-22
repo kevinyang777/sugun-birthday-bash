@@ -164,13 +164,8 @@ body.covered{overflow:hidden;height:100%}
 .cover .cwhere{font-family:var(--tech);font-weight:700;font-size:clamp(.75rem,3.2vw,1rem);letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);margin:0;max-width:32ch;text-shadow:0 0 6px #fff4b0,0 0 14px rgba(255,232,74,.6)}
 .cover .tap{color:var(--muted);font-size:.85rem;margin:0}
 @media (prefers-reduced-motion:reduce){.play,.cover.spin .reel{animation:none}.cover{transition:none}}
-/* ---- now playing ---- */
-.np{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:15;max-width:min(300px,calc(100vw - 24px));
-  background:#1a0f36;border:2px solid var(--pink);border-radius:8px;box-shadow:0 0 16px rgba(255,43,214,.5);overflow:hidden;display:grid}
-.np .bar{display:flex;align-items:center;gap:8px;padding:6px 8px 6px 10px;font-family:var(--tech);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 6px var(--cyan);min-width:0}
-.np .bar span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.np .bar a{color:var(--yellow);text-decoration:none}
-.np .yt{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;left:0;top:0}
+/* ---- hidden song holder ---- */
+.yt{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;left:0;top:0}
 </style>
 </head>
 <body>
@@ -434,12 +429,9 @@ function createPlayer() {
 function startSong() {
   const sg = CONFIG.song; if (!sg || !sg.id) return;
   const np = document.createElement('div'); np.className = 'np'; np.id = 'np';
-  const url = 'https://www.youtube.com/watch?v=' + sg.id;
-  np.innerHTML = '<div class="bar"><span>♪ ' + sg.title + '</span>'
-    + (HOSTED ? '' : '<a href="' + url + '" target="_blank" rel="noopener">Open on YouTube ▶</a>') + '</div>'
-    + (HOSTED ? '<div class="yt"><div id="ytHolder"></div></div>' : '');
+  if (!HOSTED) return; // inside claude.ai the embed is blocked, so nothing is shown
+  np.className = 'yt'; np.innerHTML = '<div id="ytHolder"></div>';
   document.body.appendChild(np);
-  if (!HOSTED) return;
   if (apiReady) createPlayer(); else pendingStart = true;
 }
 
