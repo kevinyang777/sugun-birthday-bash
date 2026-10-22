@@ -121,12 +121,60 @@ h1,h2{margin:0;line-height:1;text-wrap:balance}
 .btn:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
 footer{text-align:center;color:var(--muted);font-size:.85rem;font-family:var(--tech);letter-spacing:.15em}
 @media (prefers-reduced-motion:reduce){.flame,.out .smoke{animation:none}}
+
+/* ================= COVER ================= */
+body.covered{overflow:hidden;height:100%}
+.cover{position:fixed;inset:0;z-index:20;display:grid;place-items:center;text-align:center;background:
+  radial-gradient(ellipse 80% 60% at 50% 40%,rgba(155,61,255,.35),transparent 70%),var(--bg);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  transition:transform .9s cubic-bezier(.7,0,.3,1),opacity .9s}
+.cover.open{transform:translateY(-100%);opacity:0;pointer-events:none}
+.cover-in{display:grid;gap:22px;justify-items:center;max-width:520px;width:100%}
+.cover .invited{font-family:var(--tech);font-size:.75rem;letter-spacing:.35em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 8px var(--cyan);margin:0}
+.cover .tape{width:min(100%,420px);max-width:100%;height:auto;filter:drop-shadow(0 0 18px rgba(255,43,214,.45))}
+.cover .reel{transform-origin:center;transform-box:fill-box}
+.cover.spin .reel{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cover .ctitle{font-family:var(--script);font-size:clamp(2rem,9vw,3.4rem);color:var(--yellow);line-height:1;margin:0;text-shadow:0 0 6px #fff7b0,0 0 16px var(--yellow),0 0 34px rgba(255,232,74,.5)}
+.cover .cname{font-family:var(--slab);font-size:clamp(1.3rem,6vw,2.2rem);text-transform:uppercase;color:#fff;margin:0;text-shadow:0 0 10px rgba(255,255,255,.6),0 4px 0 #1b0a3a}
+.play{font-family:var(--tech);font-weight:900;letter-spacing:.25em;text-transform:uppercase;font-size:clamp(.9rem,3.6vw,1.15rem);border:3px solid var(--pink);border-radius:6px;
+  padding:16px 30px;background:rgba(255,43,214,.12);color:#ffd1f6;cursor:pointer;box-shadow:0 0 14px var(--pink),0 0 36px rgba(255,43,214,.5),inset 0 0 18px rgba(255,43,214,.25);
+  text-shadow:0 0 8px var(--pink);animation:pulse 1.6s ease-in-out infinite}
+.play:hover{background:rgba(255,43,214,.25)}
+.play:focus-visible{outline:3px solid var(--cyan);outline-offset:4px}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.cover .tap{color:var(--muted);font-size:.85rem;margin:0}
+@media (prefers-reduced-motion:reduce){.play,.cover.spin .reel{animation:none}.cover{transition:none}}
 </style>
 </head>
 <body>
 
 <div class="stars" aria-hidden="true"></div>
 <canvas id="confetti" aria-hidden="true"></canvas>
+
+<div class="cover" id="cover" role="dialog" aria-label="Invitation cover">
+  <div class="cover-in">
+    <p class="invited">You're invited</p>
+    <svg class="tape" viewBox="0 0 320 200" aria-hidden="true">
+      <rect x="4" y="4" width="312" height="192" rx="14" fill="#1a0f36" stroke="#19f3ff" stroke-width="4"/>
+      <rect x="22" y="22" width="276" height="96" rx="10" fill="#ff2bd6"/>
+      <rect x="22" y="22" width="276" height="30" rx="10" fill="#ffe84a"/>
+      <rect x="22" y="88" width="276" height="30" fill="#19f3ff"/>
+      <rect x="70" y="52" width="180" height="44" rx="22" fill="#1a0f36"/>
+      <g class="reel"><circle cx="108" cy="74" r="18" fill="#fff"/><circle cx="108" cy="74" r="8" fill="#1a0f36"/><g stroke="#1a0f36" stroke-width="3"><line x1="108" y1="56" x2="108" y2="92"/><line x1="90" y1="74" x2="126" y2="74"/><line x1="95" y1="61" x2="121" y2="87"/><line x1="121" y1="61" x2="95" y2="87"/></g></g>
+      <g class="reel"><circle cx="212" cy="74" r="18" fill="#fff"/><circle cx="212" cy="74" r="8" fill="#1a0f36"/><g stroke="#1a0f36" stroke-width="3"><line x1="212" y1="56" x2="212" y2="92"/><line x1="194" y1="74" x2="230" y2="74"/><line x1="199" y1="61" x2="225" y2="87"/><line x1="225" y1="61" x2="199" y2="87"/></g></g>
+      <text x="160" y="42" text-anchor="middle" font-family="Orbitron, Arial Black, sans-serif" font-weight="700" font-size="13" letter-spacing="3" fill="#1a0f36">SUGUN'S BASH MIX '26</text>
+      <rect x="60" y="140" width="200" height="40" rx="8" fill="none" stroke="#9b3dff" stroke-width="3"/>
+      <rect x="84" y="156" width="8" height="8" fill="#19f3ff"/><rect x="228" y="156" width="8" height="8" fill="#19f3ff"/>
+      <text x="160" y="166" text-anchor="middle" font-family="Orbitron, Arial Black, sans-serif" font-weight="700" font-size="12" letter-spacing="4" fill="#19f3ff">SIDE A • 80'S</text>
+    </svg>
+    <p class="ctitle">back to the 80's</p>
+    <p class="cname" id="coverName"></p>
+    <button class="play" id="play" type="button">▶ Press play</button>
+    <p class="tap">Open the invitation</p>
+  </div>
+</div>
 
 <main>
   <section class="poster" aria-label="Invitation">
@@ -221,7 +269,7 @@ function nextBirthday(iso) {
   return t;
 }
 const target = nextBirthday(CONFIG.date);
-$('when').textContent = target.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+$('when').textContent = target.toLocaleDateString('en-GB', { weekday: 'long' }) + ', ' + target.getDate() + ' ' + target.toLocaleDateString('en-GB', { month: 'long' }) + ' ' + target.getFullYear();
 function tick() {
   const now = new Date();
   if (now.toDateString() === target.toDateString()) { $('tiles').hidden = true; $('today').hidden = false; $('countLabel').textContent = 'Today'; return; }
@@ -309,6 +357,15 @@ function frame() {
   requestAnimationFrame(frame);
 }
 if (!reduced) { spawn(30, true); frame(); }
+
+/* ---------- cover ---------- */
+document.body.classList.add('covered');
+$('coverName').textContent = CONFIG.name + "'s Birthday Bash";
+$('play').addEventListener('click', () => {
+  const c = $('cover'); c.classList.add('spin');
+  setTimeout(() => { c.classList.add('open'); document.body.classList.remove('covered'); burst(); }, reduced ? 0 : 700);
+  setTimeout(() => { c.hidden = true; }, reduced ? 50 : 1700);
+});
 </script>
 </body>
 </html>
