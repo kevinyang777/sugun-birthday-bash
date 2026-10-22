@@ -39,7 +39,7 @@ h1,h2{margin:0;line-height:1;text-wrap:balance}
     linear-gradient(90deg,transparent 50%,rgba(255,255,255,.035) 50%);
   background-size:100% 30px,70px 60px,140px 30px;
   box-shadow:0 30px 60px -30px rgba(255,43,214,.5),0 0 0 1px rgba(255,255,255,.05);
-  padding:14% 8% 9%;display:grid;gap:3%;justify-items:center;text-align:center;isolation:isolate}
+  padding:14% 8% 18%;display:grid;gap:3%;justify-items:center;text-align:center;isolation:isolate}
 .poster::before,.poster::after{content:"";position:absolute;width:52%;aspect-ratio:1;border-radius:50%;z-index:0;pointer-events:none;opacity:.9;
   background:repeating-radial-gradient(circle at center,transparent 0 44%,var(--magenta) 44% 46.5%,transparent 46.5% 55%,#fff 55% 57%,transparent 57% 66%,var(--cyan) 66% 68%,transparent 68% 78%,var(--yellow) 78% 80%,transparent 80%)}
 .poster::before{left:-26%;top:-18%;filter:drop-shadow(0 0 6px var(--magenta))}
@@ -55,13 +55,13 @@ h1,h2{margin:0;line-height:1;text-wrap:balance}
 .frame .crown{position:absolute;right:16%;top:-14%;width:12%;transform:skewY(9deg)}
 .eighties{display:block;transform:skewY(9deg);font-family:var(--neon);font-size:clamp(3.6rem,20vw,8rem);line-height:1;letter-spacing:.02em;
   color:transparent;-webkit-text-stroke:3px #c68bff;text-shadow:0 0 8px #d9b3ff,0 0 20px var(--purple),0 0 48px var(--purple)}
-.join{font-family:var(--tech);font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--yellow);font-size:clamp(.8rem,3.6vw,1.25rem);margin:7% 0 0;
+.join{font-family:var(--tech);font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--yellow);font-size:clamp(.8rem,3.6vw,1.25rem);margin:5% 0 0;
   text-shadow:0 0 6px #fff4b0,0 0 14px var(--yellow)}
 .who{font-family:var(--slab);font-size:clamp(2.3rem,11.5vw,4.6rem);line-height:1;text-transform:uppercase;color:#e9d2ff;letter-spacing:.01em;
   text-shadow:0 0 6px #fff,0 0 14px #c68bff,0 0 30px var(--purple),0 0 60px var(--purple),0 5px 0 #1b0a3a}
 .bash{font-family:var(--tech);font-weight:900;font-size:clamp(1.5rem,7vw,3rem);line-height:1.05;text-transform:uppercase;color:#ff4fb6;
   text-shadow:0 0 8px #ff9ad9,0 0 22px var(--magenta),0 0 46px rgba(255,31,143,.6)}
-.when{font-family:var(--pixel);font-size:clamp(1rem,4.4vw,1.6rem);letter-spacing:.06em;text-transform:uppercase;color:var(--cyan);margin-top:5%;
+.when{font-family:var(--pixel);font-size:clamp(1rem,4.4vw,1.6rem);letter-spacing:.06em;text-transform:uppercase;color:var(--cyan);margin-top:3%;
   text-shadow:0 0 8px var(--cyan),0 0 20px rgba(25,243,255,.7)}
 .time{font-family:var(--tech);font-weight:700;font-size:clamp(1rem,4.2vw,1.45rem);letter-spacing:.14em;color:#fff;text-shadow:0 0 8px #fff,0 0 18px rgba(255,255,255,.5)}
 .where{font-family:var(--tech);font-weight:700;font-size:clamp(.78rem,3.2vw,1.05rem);letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);max-width:30ch;
@@ -268,7 +268,6 @@ body.covered{overflow:hidden;height:100%}
 
   <div class="lightbox" id="lightbox" hidden><button type="button" class="lbClose" id="lbClose" aria-label="Close photo">✕</button><img id="lbImg" alt=""></div>
 
-  <footer id="footer"></footer>
 </main>
 
 <script>
@@ -283,8 +282,7 @@ const CONFIG = {
   where2: "at the parking space",     // second line under the venue
   rsvp: "",                      // e.g. "RSVP to 0812 3456 7890" — blank hides the line
   candles: 8,                    // candles on the cake (1–10)
-  song: { id: "SwYN7mTi6HM" },   // YouTube video id; plays silently in the background after Press play
-  footer: "BE KIND • REWIND"
+  song: { id: "SwYN7mTi6HM" }    // YouTube video id; plays silently in the background after Press play
 };
 /* ============================================================ */
 
@@ -298,7 +296,6 @@ function placeInto(el) {
 placeInto($('where'));
 if (CONFIG.time) { $('time').textContent = CONFIG.time; $('time').hidden = false; }
 if (CONFIG.rsvp) { $('rsvp').textContent = CONFIG.rsvp; $('rsvp').hidden = false; }
-$('footer').textContent = CONFIG.footer || '';
 
 /* ---------- countdown ---------- */
 function nextBirthday(iso) {
