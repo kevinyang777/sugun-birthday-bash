@@ -189,7 +189,6 @@ body.covered{overflow:hidden;height:100%}
       <text x="160" y="166" text-anchor="middle" font-family="Orbitron, Arial Black, sans-serif" font-weight="700" font-size="12" letter-spacing="4" fill="#19f3ff">SIDE A • 80'S</text>
     </svg>
     <p class="ctitle">back to 80s birthday party</p>
-    <p class="cname" id="coverName"></p>
     <p class="cwhen" id="coverWhen"></p>
     <p class="ctime" id="coverTime" hidden></p>
     <p class="cwhere" id="coverWhere"></p>
@@ -432,7 +431,6 @@ function startSong() {
 
 /* ---------- cover ---------- */
 document.body.classList.add('covered');
-$('coverName').textContent = CONFIG.name + "'s Birthday Bash";
 $('coverWhen').textContent = $('when').textContent;
 if (CONFIG.time) { $('coverTime').textContent = CONFIG.time; $('coverTime').hidden = false; }
 placeInto($('coverWhere'));
