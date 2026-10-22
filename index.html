@@ -138,7 +138,7 @@ body.covered{overflow:hidden;height:100%}
 .cover .reel{transform-origin:center;transform-box:fill-box}
 .cover.spin .reel{animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.cover .ctitle{font-family:var(--script);font-size:clamp(2rem,9vw,3.4rem);color:var(--yellow);line-height:1;margin:0;text-shadow:0 0 6px #fff7b0,0 0 16px var(--yellow),0 0 34px rgba(255,232,74,.5)}
+.cover .ctitle{font-family:var(--script);font-size:clamp(1.7rem,7.5vw,3rem);color:var(--yellow);line-height:1;margin:0;text-shadow:0 0 6px #fff7b0,0 0 16px var(--yellow),0 0 34px rgba(255,232,74,.5)}
 .cover .cname{font-family:var(--slab);font-size:clamp(1.3rem,6vw,2.2rem);text-transform:uppercase;color:#e9d2ff;margin:0;text-shadow:0 0 6px #fff,0 0 14px #c68bff,0 0 30px var(--purple),0 0 56px var(--purple),0 4px 0 #1b0a3a}
 .play{font-family:var(--tech);font-weight:900;letter-spacing:.25em;text-transform:uppercase;font-size:clamp(.9rem,3.6vw,1.15rem);border:3px solid var(--pink);border-radius:6px;
   padding:16px 30px;background:rgba(255,43,214,.12);color:#ffd1f6;cursor:pointer;box-shadow:0 0 14px var(--pink),0 0 36px rgba(255,43,214,.5),inset 0 0 18px rgba(255,43,214,.25);
@@ -147,6 +147,8 @@ body.covered{overflow:hidden;height:100%}
 .play:focus-visible{outline:3px solid var(--cyan);outline-offset:4px}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
 .cover .cwhen{font-family:var(--pixel);font-size:clamp(.95rem,4vw,1.3rem);letter-spacing:.06em;text-transform:uppercase;color:var(--cyan);margin:0;text-shadow:0 0 8px var(--cyan)}
+.cover .ctime{font-family:var(--tech);font-weight:700;font-size:clamp(.95rem,4vw,1.3rem);letter-spacing:.14em;color:#fff;margin:0;text-shadow:0 0 8px #fff,0 0 18px rgba(255,255,255,.5)}
+.cover [hidden]{display:none}
 .cover .cwhere{font-family:var(--tech);font-weight:700;font-size:clamp(.75rem,3.2vw,1rem);letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);margin:0;max-width:32ch;text-shadow:0 0 6px #fff4b0,0 0 14px rgba(255,232,74,.6)}
 .cover .tap{color:var(--muted);font-size:.85rem;margin:0}
 @media (prefers-reduced-motion:reduce){.play,.cover.spin .reel{animation:none}.cover{transition:none}}
@@ -186,9 +188,10 @@ body.covered{overflow:hidden;height:100%}
       <rect x="84" y="156" width="8" height="8" fill="#19f3ff"/><rect x="228" y="156" width="8" height="8" fill="#19f3ff"/>
       <text x="160" y="166" text-anchor="middle" font-family="Orbitron, Arial Black, sans-serif" font-weight="700" font-size="12" letter-spacing="4" fill="#19f3ff">SIDE A • 80'S</text>
     </svg>
-    <p class="ctitle">back to the 80's</p>
+    <p class="ctitle">back to 80s birthday party</p>
     <p class="cname" id="coverName"></p>
     <p class="cwhen" id="coverWhen"></p>
+    <p class="ctime" id="coverTime" hidden></p>
     <p class="cwhere" id="coverWhere"></p>
     <button class="play" id="play" type="button">▶ Press play</button>
     <p class="tap">Open the invitation</p>
@@ -262,8 +265,9 @@ body.covered{overflow:hidden;height:100%}
 const CONFIG = {
   name: "Sugun Susilo",
   date: "2026-11-09",            // YYYY-MM-DD (page counts down to the next occurrence)
-  time: "11 AM - DROP",          // shown exactly as written; blank hides the line
-  where: "PT Akino Wahanamulia, at the parking space",
+  time: "11am-drop",             // shown exactly as written; blank hides the line
+  where: "PT Akino Wahanamulia",
+  where2: "at the parking space",     // second line under the venue
   mapUrl: "https://www.google.com/maps/search/?api=1&query=PT+Akino+Wahanamulia",   // blank = plain text
   rsvp: "",                      // e.g. "RSVP to 0812 3456 7890" — blank hides the line
   candles: 8,                    // candles on the cake (1–10)
@@ -278,7 +282,8 @@ document.title = `${CONFIG.name.split(' ')[0]}'s Birthday Bash`;
 function placeInto(el) {
   el.textContent = '';
   if (CONFIG.mapUrl) { const a = document.createElement('a'); a.href = CONFIG.mapUrl; a.target = '_blank'; a.rel = 'noopener'; a.textContent = (CONFIG.where || '') + ' 📍'; a.title = 'Open in Google Maps'; el.appendChild(a); }
-  else el.textContent = CONFIG.where || '';
+  else el.append(CONFIG.where || '');
+  if (CONFIG.where2) { el.appendChild(document.createElement('br')); el.append(CONFIG.where2); }
 }
 placeInto($('where'));
 if (CONFIG.time) { $('time').textContent = CONFIG.time; $('time').hidden = false; }
@@ -428,7 +433,8 @@ function startSong() {
 /* ---------- cover ---------- */
 document.body.classList.add('covered');
 $('coverName').textContent = CONFIG.name + "'s Birthday Bash";
-$('coverWhen').textContent = $('when').textContent + (CONFIG.time ? ' • ' + CONFIG.time : '');
+$('coverWhen').textContent = $('when').textContent;
+if (CONFIG.time) { $('coverTime').textContent = CONFIG.time; $('coverTime').hidden = false; }
 placeInto($('coverWhere'));
 $('play').addEventListener('click', () => {
   const c = $('cover'); c.classList.add('spin'); startSong();
