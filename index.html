@@ -144,6 +144,8 @@ body.covered{overflow:hidden;height:100%}
 .play:hover{background:rgba(255,43,214,.25)}
 .play:focus-visible{outline:3px solid var(--cyan);outline-offset:4px}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.cover .cwhen{font-family:var(--pixel);font-size:clamp(.95rem,4vw,1.3rem);letter-spacing:.06em;text-transform:uppercase;color:var(--cyan);margin:0;text-shadow:0 0 8px var(--cyan)}
+.cover .cwhere{font-family:var(--tech);font-weight:700;font-size:clamp(.75rem,3.2vw,1rem);letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);margin:0;max-width:32ch;text-shadow:0 0 6px #fff4b0,0 0 14px rgba(255,232,74,.6)}
 .cover .tap{color:var(--muted);font-size:.85rem;margin:0}
 @media (prefers-reduced-motion:reduce){.play,.cover.spin .reel{animation:none}.cover{transition:none}}
 </style>
@@ -171,6 +173,8 @@ body.covered{overflow:hidden;height:100%}
     </svg>
     <p class="ctitle">back to the 80's</p>
     <p class="cname" id="coverName"></p>
+    <p class="cwhen" id="coverWhen"></p>
+    <p class="cwhere" id="coverWhere"></p>
     <button class="play" id="play" type="button">▶ Press play</button>
     <p class="tap">Open the invitation</p>
   </div>
@@ -243,7 +247,7 @@ body.covered{overflow:hidden;height:100%}
 const CONFIG = {
   name: "Sugun Susilo",
   date: "2026-11-09",            // YYYY-MM-DD (page counts down to the next occurrence)
-  time: "",                      // e.g. "05:00 PM" — blank hides the line
+  time: "11:00 till you drop",   // blank hides the line
   where: "PT Akino Wahanamulia, at the parking space",
   rsvp: "",                      // e.g. "RSVP to 0812 3456 7890" — blank hides the line
   candles: 8,                    // candles on the cake (1–10)
@@ -255,7 +259,7 @@ const $ = id => document.getElementById(id);
 $('who').textContent = CONFIG.name + "'s";
 document.title = `${CONFIG.name.split(' ')[0]}'s Birthday Bash`;
 $('where').textContent = CONFIG.where || '';
-if (CONFIG.time) { $('time').textContent = 'At ' + CONFIG.time; $('time').hidden = false; }
+if (CONFIG.time) { $('time').textContent = 'From ' + CONFIG.time; $('time').hidden = false; }
 if (CONFIG.rsvp) { $('rsvp').textContent = CONFIG.rsvp; $('rsvp').hidden = false; }
 $('footer').textContent = CONFIG.footer || '';
 
@@ -361,6 +365,8 @@ if (!reduced) { spawn(30, true); frame(); }
 /* ---------- cover ---------- */
 document.body.classList.add('covered');
 $('coverName').textContent = CONFIG.name + "'s Birthday Bash";
+$('coverWhen').textContent = $('when').textContent + (CONFIG.time ? ' • from ' + CONFIG.time : '');
+$('coverWhere').textContent = CONFIG.where || '';
 $('play').addEventListener('click', () => {
   const c = $('cover'); c.classList.add('spin');
   setTimeout(() => { c.classList.add('open'); document.body.classList.remove('covered'); burst(); }, reduced ? 0 : 700);
