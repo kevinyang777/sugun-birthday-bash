@@ -57,8 +57,8 @@ h1,h2{margin:0;line-height:1;text-wrap:balance}
   color:transparent;-webkit-text-stroke:3px #c68bff;text-shadow:0 0 8px #d9b3ff,0 0 20px var(--purple),0 0 48px var(--purple)}
 .join{font-family:var(--tech);font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--yellow);font-size:clamp(.8rem,3.6vw,1.25rem);margin:7% 0 0;
   text-shadow:0 0 6px #fff4b0,0 0 14px var(--yellow)}
-.who{font-family:var(--slab);font-size:clamp(2.3rem,11.5vw,4.6rem);line-height:1;text-transform:uppercase;color:#fff;letter-spacing:.01em;
-  text-shadow:0 0 10px rgba(255,255,255,.7),0 0 26px rgba(255,255,255,.35),0 5px 0 #1b0a3a}
+.who{font-family:var(--slab);font-size:clamp(2.3rem,11.5vw,4.6rem);line-height:1;text-transform:uppercase;color:#e9d2ff;letter-spacing:.01em;
+  text-shadow:0 0 6px #fff,0 0 14px #c68bff,0 0 30px var(--purple),0 0 60px var(--purple),0 5px 0 #1b0a3a}
 .bash{font-family:var(--tech);font-weight:900;font-size:clamp(1.5rem,7vw,3rem);line-height:1.05;text-transform:uppercase;color:#ff4fb6;
   text-shadow:0 0 8px #ff9ad9,0 0 22px var(--magenta),0 0 46px rgba(255,31,143,.6)}
 .when{font-family:var(--pixel);font-size:clamp(1rem,4.4vw,1.6rem);letter-spacing:.06em;text-transform:uppercase;color:var(--cyan);margin-top:5%;
@@ -137,7 +137,7 @@ body.covered{overflow:hidden;height:100%}
 .cover.spin .reel{animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .cover .ctitle{font-family:var(--script);font-size:clamp(2rem,9vw,3.4rem);color:var(--yellow);line-height:1;margin:0;text-shadow:0 0 6px #fff7b0,0 0 16px var(--yellow),0 0 34px rgba(255,232,74,.5)}
-.cover .cname{font-family:var(--slab);font-size:clamp(1.3rem,6vw,2.2rem);text-transform:uppercase;color:#fff;margin:0;text-shadow:0 0 10px rgba(255,255,255,.6),0 4px 0 #1b0a3a}
+.cover .cname{font-family:var(--slab);font-size:clamp(1.3rem,6vw,2.2rem);text-transform:uppercase;color:#e9d2ff;margin:0;text-shadow:0 0 6px #fff,0 0 14px #c68bff,0 0 30px var(--purple),0 0 56px var(--purple),0 4px 0 #1b0a3a}
 .play{font-family:var(--tech);font-weight:900;letter-spacing:.25em;text-transform:uppercase;font-size:clamp(.9rem,3.6vw,1.15rem);border:3px solid var(--pink);border-radius:6px;
   padding:16px 30px;background:rgba(255,43,214,.12);color:#ffd1f6;cursor:pointer;box-shadow:0 0 14px var(--pink),0 0 36px rgba(255,43,214,.5),inset 0 0 18px rgba(255,43,214,.25);
   text-shadow:0 0 8px var(--pink);animation:pulse 1.6s ease-in-out infinite}
@@ -148,6 +148,15 @@ body.covered{overflow:hidden;height:100%}
 .cover .cwhere{font-family:var(--tech);font-weight:700;font-size:clamp(.75rem,3.2vw,1rem);letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);margin:0;max-width:32ch;text-shadow:0 0 6px #fff4b0,0 0 14px rgba(255,232,74,.6)}
 .cover .tap{color:var(--muted);font-size:.85rem;margin:0}
 @media (prefers-reduced-motion:reduce){.play,.cover.spin .reel{animation:none}.cover{transition:none}}
+/* ---- now playing ---- */
+.np{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:15;width:min(300px,calc(100vw - 24px));
+  background:#1a0f36;border:2px solid var(--pink);border-radius:8px;box-shadow:0 0 16px rgba(255,43,214,.5);overflow:hidden;display:grid}
+.np .bar{display:flex;align-items:center;gap:8px;padding:6px 8px 6px 10px;font-family:var(--tech);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 6px var(--cyan);min-width:0}
+.np .bar span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np .bar a{color:var(--yellow);text-decoration:none}
+.np button{font:inherit;background:none;border:0;color:#fff;cursor:pointer;font-size:1rem;line-height:1;padding:2px 4px}
+.np button:focus-visible{outline:2px solid var(--cyan)}
+.np iframe{display:block;width:100%;aspect-ratio:16/9;border:0;background:#000}
 </style>
 </head>
 <body>
@@ -251,6 +260,7 @@ const CONFIG = {
   where: "PT Akino Wahanamulia, at the parking space",
   rsvp: "",                      // e.g. "RSVP to 0812 3456 7890" — blank hides the line
   candles: 8,                    // candles on the cake (1–10)
+  song: { id: "SwYN7mTi6HM", title: "Van Halen – Jump" },   // YouTube video id; plays when you press play
   footer: "BE KIND • REWIND"
 };
 /* ============================================================ */
@@ -362,13 +372,30 @@ function frame() {
 }
 if (!reduced) { spawn(30, true); frame(); }
 
+/* ---------- song ---------- */
+const HOSTED = true; // set to true on the GitHub Pages build (iframes are blocked inside claude.ai)
+function startSong() {
+  const sg = CONFIG.song; if (!sg || !sg.id) return;
+  const np = document.createElement('div'); np.className = 'np'; np.id = 'np';
+  const url = 'https://www.youtube.com/watch?v=' + sg.id;
+  np.innerHTML = '<div class="bar"><span>♪ ' + sg.title + '</span>' + (HOSTED ? '' : '<a href="' + url + '" target="_blank" rel="noopener">Play on YouTube ▶</a>') + '<button type="button" aria-label="Close player">✕</button></div>';
+  if (HOSTED) {
+    const f = document.createElement('iframe');
+    f.src = 'https://www.youtube.com/embed/' + sg.id + '?autoplay=1&loop=1&playlist=' + sg.id + '&rel=0';
+    f.allow = 'autoplay; encrypted-media; picture-in-picture'; f.title = sg.title; f.setAttribute('allowfullscreen', '');
+    np.appendChild(f);
+  }
+  np.querySelector('button').addEventListener('click', () => np.remove());
+  document.body.appendChild(np);
+}
+
 /* ---------- cover ---------- */
 document.body.classList.add('covered');
 $('coverName').textContent = CONFIG.name + "'s Birthday Bash";
 $('coverWhen').textContent = $('when').textContent + (CONFIG.time ? ' • from ' + CONFIG.time : '');
 $('coverWhere').textContent = CONFIG.where || '';
 $('play').addEventListener('click', () => {
-  const c = $('cover'); c.classList.add('spin');
+  const c = $('cover'); c.classList.add('spin'); startSong();
   setTimeout(() => { c.classList.add('open'); document.body.classList.remove('covered'); burst(); }, reduced ? 0 : 700);
   setTimeout(() => { c.hidden = true; }, reduced ? 50 : 1700);
 });
