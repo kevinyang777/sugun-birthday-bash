@@ -66,6 +66,8 @@ h1,h2{margin:0;line-height:1;text-wrap:balance}
 .time{font-family:var(--tech);font-weight:700;font-size:clamp(1rem,4.2vw,1.45rem);letter-spacing:.14em;color:#fff;text-shadow:0 0 8px #fff,0 0 18px rgba(255,255,255,.5)}
 .where{font-family:var(--tech);font-weight:700;font-size:clamp(.78rem,3.2vw,1.05rem);letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);max-width:30ch;
   text-shadow:0 0 6px #fff4b0,0 0 14px rgba(255,232,74,.7)}
+.where a,.cover .cwhere a{color:inherit;text-decoration:underline;text-decoration-color:rgba(255,232,74,.5);text-underline-offset:4px}
+.where a:hover,.cover .cwhere a:hover{text-decoration-color:var(--yellow)}
 .rsvp{font-family:var(--pixel);font-size:clamp(.8rem,3.4vw,1.1rem);letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 8px var(--cyan)}
 .poster [hidden]{display:none}
 
@@ -156,7 +158,11 @@ body.covered{overflow:hidden;height:100%}
 .np .bar a{color:var(--yellow);text-decoration:none}
 .np button{font:inherit;background:none;border:0;color:#fff;cursor:pointer;font-size:1rem;line-height:1;padding:2px 4px}
 .np button:focus-visible{outline:2px solid var(--cyan)}
-.np iframe{display:block;width:100%;aspect-ratio:16/9;border:0;background:#000}
+.np .ctl{display:flex;gap:6px;padding:0 8px 8px}
+.np .ctl button{flex:1;font-family:var(--tech);font-size:.62rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border:2px solid var(--cyan);border-radius:4px;
+  padding:8px 6px;color:var(--cyan);background:rgba(25,243,255,.08);box-shadow:0 0 10px rgba(25,243,255,.3)}
+.np .ctl button:hover{background:rgba(25,243,255,.2)}
+.np .yt{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;left:0;top:0}
 </style>
 </head>
 <body>
@@ -258,6 +264,7 @@ const CONFIG = {
   date: "2026-11-09",            // YYYY-MM-DD (page counts down to the next occurrence)
   time: "11 AM - DROP",          // shown exactly as written; blank hides the line
   where: "PT Akino Wahanamulia, at the parking space",
+  mapUrl: "https://www.google.com/maps/search/?api=1&query=PT+Akino+Wahanamulia",   // blank = plain text
   rsvp: "",                      // e.g. "RSVP to 0812 3456 7890" — blank hides the line
   candles: 8,                    // candles on the cake (1–10)
   song: { id: "SwYN7mTi6HM", title: "Van Halen – Jump" },   // YouTube video id; plays when you press play
@@ -268,7 +275,12 @@ const CONFIG = {
 const $ = id => document.getElementById(id);
 $('who').textContent = CONFIG.name + "'s";
 document.title = `${CONFIG.name.split(' ')[0]}'s Birthday Bash`;
-$('where').textContent = CONFIG.where || '';
+function placeInto(el) {
+  el.textContent = '';
+  if (CONFIG.mapUrl) { const a = document.createElement('a'); a.href = CONFIG.mapUrl; a.target = '_blank'; a.rel = 'noopener'; a.textContent = (CONFIG.where || '') + ' 📍'; a.title = 'Open in Google Maps'; el.appendChild(a); }
+  else el.textContent = CONFIG.where || '';
+}
+placeInto($('where'));
 if (CONFIG.time) { $('time').textContent = CONFIG.time; $('time').hidden = false; }
 if (CONFIG.rsvp) { $('rsvp').textContent = CONFIG.rsvp; $('rsvp').hidden = false; }
 $('footer').textContent = CONFIG.footer || '';
@@ -374,26 +386,50 @@ if (!reduced) { spawn(30, true); frame(); }
 
 /* ---------- song ---------- */
 const HOSTED = true; // set to true on the GitHub Pages build (iframes are blocked inside claude.ai)
+let player = null, apiReady = false, pendingStart = false;
+if (HOSTED && CONFIG.song && CONFIG.song.id) {
+  const tag = document.createElement('script'); tag.src = 'https://www.youtube.com/iframe_api'; document.head.appendChild(tag);
+}
+window.onYouTubeIframeAPIReady = () => { apiReady = true; if (pendingStart) createPlayer(); };
+function createPlayer() {
+  if (player) return;
+  const holder = document.getElementById('ytHolder'); if (!holder) return;
+  player = new YT.Player('ytHolder', {
+    videoId: CONFIG.song.id, width: 1, height: 1,
+    playerVars: { autoplay: 1, loop: 1, playlist: CONFIG.song.id, controls: 0, rel: 0, playsinline: 1 },
+    events: {
+      onReady: e => { e.target.setVolume(80); e.target.playVideo(); },
+      onStateChange: e => { const b = document.getElementById('npPlay'); if (b) b.textContent = e.data === 1 ? '⏸ Pause' : '▶ Play'; }
+    }
+  });
+}
 function startSong() {
   const sg = CONFIG.song; if (!sg || !sg.id) return;
   const np = document.createElement('div'); np.className = 'np'; np.id = 'np';
   const url = 'https://www.youtube.com/watch?v=' + sg.id;
-  np.innerHTML = '<div class="bar"><span>♪ ' + sg.title + '</span>' + (HOSTED ? '' : '<a href="' + url + '" target="_blank" rel="noopener">Play on YouTube ▶</a>') + '<button type="button" aria-label="Close player">✕</button></div>';
-  if (HOSTED) {
-    const f = document.createElement('iframe');
-    f.src = 'https://www.youtube.com/embed/' + sg.id + '?autoplay=1&loop=1&playlist=' + sg.id + '&rel=0';
-    f.allow = 'autoplay; encrypted-media; picture-in-picture'; f.title = sg.title; f.setAttribute('allowfullscreen', '');
-    np.appendChild(f);
-  }
-  np.querySelector('button').addEventListener('click', () => np.remove());
+  np.innerHTML = '<div class="bar"><span>♪ ' + sg.title + '</span>'
+    + (HOSTED ? '' : '<a href="' + url + '" target="_blank" rel="noopener">Open on YouTube ▶</a>')
+    + '<button type="button" id="npClose" aria-label="Close player">✕</button></div>'
+    + (HOSTED ? '<div class="ctl"><button type="button" id="npPlay">▶ Play</button><button type="button" id="npMute">🔊 Mute</button></div><div class="yt"><div id="ytHolder"></div></div>' : '');
   document.body.appendChild(np);
+  np.querySelector('#npClose').addEventListener('click', () => { if (player) { try { player.stopVideo(); player.destroy(); } catch (e) {} player = null; } np.remove(); });
+  if (!HOSTED) return;
+  np.querySelector('#npPlay').addEventListener('click', () => {
+    if (!player) return;
+    if (player.getPlayerState() === 1) player.pauseVideo(); else player.playVideo();
+  });
+  np.querySelector('#npMute').addEventListener('click', e => {
+    if (!player) return;
+    if (player.isMuted()) { player.unMute(); e.target.textContent = '🔊 Mute'; } else { player.mute(); e.target.textContent = '🔇 Unmute'; }
+  });
+  if (apiReady) createPlayer(); else pendingStart = true;
 }
 
 /* ---------- cover ---------- */
 document.body.classList.add('covered');
 $('coverName').textContent = CONFIG.name + "'s Birthday Bash";
 $('coverWhen').textContent = $('when').textContent + (CONFIG.time ? ' • ' + CONFIG.time : '');
-$('coverWhere').textContent = CONFIG.where || '';
+placeInto($('coverWhere'));
 $('play').addEventListener('click', () => {
   const c = $('cover'); c.classList.add('spin'); startSong();
   setTimeout(() => { c.classList.add('open'); document.body.classList.remove('covered'); burst(); }, reduced ? 0 : 700);
