@@ -139,13 +139,15 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;font-family:var(--t
 
 /* ================= COVER ================= */
 body.covered{overflow:hidden;height:100%}
-.cover{position:fixed;inset:0;z-index:20;display:grid;place-items:center;text-align:center;background:
+.cover{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;text-align:center;background:
   radial-gradient(ellipse 80% 60% at 50% 40%,rgba(155,61,255,.35),transparent 70%),var(--bg);
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
   padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
   transition:transform .9s cubic-bezier(.7,0,.3,1),opacity .9s}
 .cover.open{transform:translateY(-100%);opacity:0;pointer-events:none}
-.cover-in{display:grid;gap:22px;justify-items:center;max-width:520px;width:100%}
+.cover-in{display:grid;gap:22px;justify-items:center;max-width:520px;width:100%;margin:auto;padding-block:24px}
+@media (max-height:720px){.cover-in{gap:14px;padding-block:16px}.cover .tape{width:min(70%,260px)}.cover .ctitle{font-size:clamp(1.5rem,6vw,2.2rem)}.play{padding:12px 24px}}
+@media (max-height:560px){.cover .tape{width:min(55%,200px)}.cover-in{gap:10px}}
 .cover .invited{font-family:var(--tech);font-size:.75rem;letter-spacing:.35em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 8px var(--cyan);margin:0}
 .cover .tape{width:min(100%,420px);max-width:100%;height:auto;filter:drop-shadow(0 0 18px rgba(255,43,214,.45))}
 .cover .reel{transform-origin:center;transform-box:fill-box}
