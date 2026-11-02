@@ -40,11 +40,11 @@ h1,h2{margin:0;line-height:1;text-wrap:balance}
     linear-gradient(90deg,transparent 50%,rgba(255,255,255,.035) 50%);
   background-size:100% 30px,70px 60px,140px 30px;
   box-shadow:0 30px 60px -30px rgba(255,43,214,.5),0 0 0 1px rgba(255,255,255,.05);
-  padding:14% 8% 14%;display:grid;gap:3%;justify-items:center;text-align:center;isolation:isolate}
+  padding:14% 8% 24%;display:grid;gap:3%;justify-items:center;text-align:center;isolation:isolate}
 .poster::before,.poster::after{content:"";position:absolute;width:52%;aspect-ratio:1;border-radius:50%;z-index:0;pointer-events:none;opacity:.9;
   background:repeating-radial-gradient(circle at center,transparent 0 44%,var(--magenta) 44% 46.5%,transparent 46.5% 55%,#fff 55% 57%,transparent 57% 66%,var(--cyan) 66% 68%,transparent 68% 78%,var(--yellow) 78% 80%,transparent 80%)}
 .poster::before{left:-26%;top:-18%;filter:drop-shadow(0 0 6px var(--magenta))}
-.poster::after{right:-28%;bottom:-24%;filter:drop-shadow(0 0 6px var(--cyan))}
+.poster::after{right:-32%;bottom:-34%;filter:drop-shadow(0 0 6px var(--cyan))}
 .poster>*{position:relative;z-index:2}
 
 .back{font-family:var(--script);font-size:clamp(2.2rem,11vw,4.4rem);color:var(--yellow);line-height:.9;margin:0 0 -6%;
@@ -67,10 +67,11 @@ h1,h2{margin:0;line-height:1;text-wrap:balance}
 .time{font-family:var(--tech);font-weight:700;font-size:clamp(1rem,4.2vw,1.45rem);letter-spacing:.14em;color:#fff;text-shadow:0 0 8px #fff,0 0 18px rgba(255,255,255,.5)}
 .where{font-family:var(--tech);font-weight:700;font-size:clamp(.78rem,3.2vw,1.05rem);letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);max-width:30ch;
   text-shadow:0 0 6px #fff4b0,0 0 14px rgba(255,232,74,.7)}
-.dress,.cover .cdress{font-family:var(--tech);font-weight:700;font-size:clamp(.66rem,2.8vw,.9rem);letter-spacing:.08em;text-transform:uppercase;color:var(--mint);margin:0;max-width:40ch;line-height:1.5;
+.dress,.cover .cdress{font-family:var(--tech);font-weight:700;font-size:clamp(.78rem,3.2vw,1.05rem);letter-spacing:.08em;text-transform:uppercase;color:var(--mint);margin:6% 0 0;max-width:36ch;line-height:1.5;
+  padding:14px 16px;border:2px solid rgba(46,242,180,.6);border-radius:6px;background:rgba(7,3,15,.55);box-shadow:0 0 14px rgba(46,242,180,.35),inset 0 0 14px rgba(46,242,180,.12);
   text-shadow:0 0 6px rgba(46,242,180,.8),0 0 14px rgba(46,242,180,.5)}
 .dress b,.cover .cdress b{display:block;color:var(--pink);text-shadow:0 0 6px #ff9ad9,0 0 14px var(--magenta);margin-top:4px}
-.dress small,.cover .cdress small{display:block;font-size:.8em;letter-spacing:.2em;color:var(--cyan);text-shadow:0 0 8px var(--cyan);margin-bottom:2px}
+.dress small,.cover .cdress small{display:block;font-size:.8em;letter-spacing:.25em;color:var(--cyan);text-shadow:0 0 8px var(--cyan);margin-bottom:6px}
 .rsvp{font-family:var(--pixel);font-size:clamp(.8rem,3.4vw,1.1rem);letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 8px var(--cyan)}
 .poster [hidden]{display:none}
 
