@@ -200,7 +200,6 @@ body.covered{overflow:hidden;height:100%}
     <p class="cwhen" id="coverWhen"></p>
     <p class="ctime" id="coverTime" hidden></p>
     <p class="cwhere" id="coverWhere"></p>
-    <p class="cdress" id="coverDress" hidden></p>
     <button class="play" id="play" type="button">▶ Press play</button>
     <p class="tap">Open the invitation</p>
   </div>
@@ -457,7 +456,6 @@ document.body.classList.add('covered');
 $('coverWhen').textContent = $('when').textContent;
 if (CONFIG.time) { $('coverTime').textContent = CONFIG.time; $('coverTime').hidden = false; }
 placeInto($('coverWhere'));
-dressInto($('coverDress'));
 $('play').addEventListener('click', () => {
   const c = $('cover'); c.classList.add('spin'); startSong();
   setTimeout(() => { c.classList.add('open'); document.body.classList.remove('covered'); burst(); }, reduced ? 0 : 700);
