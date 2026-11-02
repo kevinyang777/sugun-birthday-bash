@@ -67,6 +67,10 @@ h1,h2{margin:0;line-height:1;text-wrap:balance}
 .time{font-family:var(--tech);font-weight:700;font-size:clamp(1rem,4.2vw,1.45rem);letter-spacing:.14em;color:#fff;text-shadow:0 0 8px #fff,0 0 18px rgba(255,255,255,.5)}
 .where{font-family:var(--tech);font-weight:700;font-size:clamp(.78rem,3.2vw,1.05rem);letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);max-width:30ch;
   text-shadow:0 0 6px #fff4b0,0 0 14px rgba(255,232,74,.7)}
+.dress,.cover .cdress{font-family:var(--tech);font-weight:700;font-size:clamp(.66rem,2.8vw,.9rem);letter-spacing:.08em;text-transform:uppercase;color:var(--mint);margin:0;max-width:40ch;line-height:1.5;
+  text-shadow:0 0 6px rgba(46,242,180,.8),0 0 14px rgba(46,242,180,.5)}
+.dress b,.cover .cdress b{display:block;color:var(--pink);text-shadow:0 0 6px #ff9ad9,0 0 14px var(--magenta);margin-top:4px}
+.dress small,.cover .cdress small{display:block;font-size:.8em;letter-spacing:.2em;color:var(--cyan);text-shadow:0 0 8px var(--cyan);margin-bottom:2px}
 .rsvp{font-family:var(--pixel);font-size:clamp(.8rem,3.4vw,1.1rem);letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 8px var(--cyan)}
 .poster [hidden]{display:none}
 
@@ -196,6 +200,7 @@ body.covered{overflow:hidden;height:100%}
     <p class="cwhen" id="coverWhen"></p>
     <p class="ctime" id="coverTime" hidden></p>
     <p class="cwhere" id="coverWhere"></p>
+    <p class="cdress" id="coverDress" hidden></p>
     <button class="play" id="play" type="button">▶ Press play</button>
     <p class="tap">Open the invitation</p>
   </div>
@@ -236,6 +241,7 @@ body.covered{overflow:hidden;height:100%}
     <p class="when" id="when"></p>
     <p class="time" id="time" hidden></p>
     <p class="where" id="where"></p>
+    <p class="dress" id="dress" hidden></p>
     <p class="rsvp" id="rsvp" hidden></p>
   </section>
 
@@ -280,7 +286,9 @@ body.covered{overflow:hidden;height:100%}
 const CONFIG = {
   name: "Sugun Susilo",
   date: "2026-11-10",            // YYYY-MM-DD (page counts down to the next occurrence)
-  time: "11am-drop",             // shown exactly as written; blank hides the line
+  time: "11.45am-drop",          // shown exactly as written; blank hides the line
+  dress: "80's Theme (Colourful & Neon outfit, Streetwear Retro, Party, Aerobic neon outfit)",
+  dressNote: "Exclusive prizes for the Best Dress Award!",
   where: "PT Akino Wahanamulia",
   where2: "at the parking space",     // second line under the venue
   rsvp: "",                      // e.g. "RSVP to 0812 3456 7890" — blank hides the line
@@ -297,6 +305,15 @@ function placeInto(el) {
   if (CONFIG.where2) { el.appendChild(document.createElement('br')); el.append(CONFIG.where2); }
 }
 placeInto($('where'));
+function dressInto(el) {
+  if (!CONFIG.dress) return;
+  el.textContent = '';
+  const lab = document.createElement('small'); lab.textContent = 'Dress code'; el.appendChild(lab);
+  el.append(CONFIG.dress);
+  if (CONFIG.dressNote) { const b = document.createElement('b'); b.textContent = '★ ' + CONFIG.dressNote + ' ★'; el.appendChild(b); }
+  el.hidden = false;
+}
+dressInto($('dress'));
 if (CONFIG.time) { $('time').textContent = CONFIG.time; $('time').hidden = false; }
 if (CONFIG.rsvp) { $('rsvp').textContent = CONFIG.rsvp; $('rsvp').hidden = false; }
 
@@ -440,6 +457,7 @@ document.body.classList.add('covered');
 $('coverWhen').textContent = $('when').textContent;
 if (CONFIG.time) { $('coverTime').textContent = CONFIG.time; $('coverTime').hidden = false; }
 placeInto($('coverWhere'));
+dressInto($('coverDress'));
 $('play').addEventListener('click', () => {
   const c = $('cover'); c.classList.add('spin'); startSong();
   setTimeout(() => { c.classList.add('open'); document.body.classList.remove('covered'); burst(); }, reduced ? 0 : 700);
