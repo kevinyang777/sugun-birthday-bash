@@ -299,7 +299,7 @@ const CONFIG = {
 
 const $ = id => document.getElementById(id);
 $('who').textContent = CONFIG.name + "'s";
-document.title = `${CONFIG.name.split(' ')[0]}'s Birthday Bash`;
+document.title = `${CONFIG.name.replace(/^(Mr|Mrs|Ms|Dr)\.?\s+/i, '').split(' ')[0]}'s Birthday Bash`;
 function placeInto(el) {
   el.textContent = CONFIG.where || '';
   if (CONFIG.where2) { el.appendChild(document.createElement('br')); el.append(CONFIG.where2); }
